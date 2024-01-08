@@ -4,9 +4,20 @@
 class SportPage
 {
     private:
-        unsigned int menu; //선택된 메뉴 번호 저장
+        unsigned short menu; //선택된 메뉴 번호 저장
         bool quit_s=false; //while 루프 탈출 트리거
         char group; //조 선택 저장
-        unsigned int nation; //참가국 선택 번호
+        unsigned short nation; //참가국 선택 번호
+    public:
+        //아시안컵 기본정보 및 상세 정보 메뉴
+        void ShowInfo(void); 
+        //조편성 정보
+        void ShowGroup(void); 
+        //조별 일정
+        void ShowGroupSchedule(void);
+        //참가국 정보 
+        void ShowNationInfo(void);
+        //스포츠 정보 게시판 
+        void HomeBoard(void); 
 };
 #endif

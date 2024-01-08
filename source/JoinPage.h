@@ -20,5 +20,11 @@ class JoinPage
     public:
         //회원가입 메인 진행
         void ProgressJoin(void);
+        //아이디 검사
+        bool CheckID(void);
+        //비밀번호 검사
+        bool CheckPW(void);
+        //이메일 검사
+        bool CheckEmail(void);
 };
 #endif

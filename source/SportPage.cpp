@@ -573,7 +573,14 @@ void SportPage::HomeBoard(void)
                         "       (코치) 파올로 스트핑가라(PAOLO Stringara) \n"
                         "       (GK코치) 안드레아스 쾨프케(ANDREAS Kopke) \n"
                         "       (피지컬코치) 베르너 로이타드(WERNER Leuthard) \n"
-                        "       (피지컬코치) 이재홍(LEE Jaehong) \n\n";
+                        "       (피지컬코치) 이재홍(LEE Jaehong) \n\n"
+                        "GK] 김승규, 송범근, 조현우 \n\n"
+                        "DF] 김민재, 김영권, 김주성, 김지수, 김진수, \n"
+                        "    김태환, 박진섭, 설영우, 이기제, 정승현 \n\n"
+                        "MF] 문선민, 박용우, 손흥민, 양현준, 이강인, \n"
+                        "    이순민, 이재성, 홍현석, 황인범, 황희찬 \n\n"
+                        "FW] 오현규, 정우영, 조규성 \n\n"
+                        "엔터키 입력시 돌아갑니다)";
                 cin.get();
                 cin.get();
                 break;

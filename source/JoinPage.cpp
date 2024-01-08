@@ -8,6 +8,119 @@
 
 using namespace std;
 
+bool JoinPage::CheckID(void)
+{
+    //문자수 부족 혹은 초과이거나 영문자가 아닌 문자로 시작
+    if((id.size()<6||id.size()>20)||(!isalpha(id.front())))
+    {
+        return true;
+    } 
+    else //위 조건 통과
+    {
+        for(int i=0;i<id.size();i++) //영문자,숫자 제외한 문자 있는지 검사
+        {
+            if(!islower(id[i])&&!isdigit(id[i])) 
+            {
+                return true;
+            }
+        }
+        //데이터 파일 열기
+        ifstream readFile;
+        readFile.open("data.csv");
+        if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
+        {
+            ofstream tempFile;
+            tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
+            if(!tempFile.is_open())
+            {
+                cout<<"아이디 중복 검사에 실패했습니다. \n";
+                exit(1);
+            }
+            tempFile.close();
+        }
+        //중복 검사 실시
+        string temp;
+        while(!readFile.eof())
+        {
+            getline(readFile,temp,','); //회원번호 건너뛰기
+            getline(readFile,temp,','); //아이디 가져오기
+            if(!temp.compare(id)) //아이디가 중복이면
+            {
+                cout<<"중복된 아이디입니다. \n";
+                return true;
+            }
+            for(int i=0;i<3;i++)
+            {
+                getline(readFile,temp,','); //비밀번호,이메일,휴대폰 건너뛰기
+            }
+        }
+        readFile.close();
+    }
+    return false;
+}
+bool JoinPage::CheckPW(void)
+{
+    //영문자,숫자,특수문자 포함 확인 변수
+    unsigned short alphaCNT = 0;
+    unsigned short digitCNT = 0;
+    unsigned short punctCNT = 0;
+
+    if((password.size()<8||password.size()>12)) return true; //자리수 검사
+    else //위 조건 통과
+    {
+        for(int i=0;i<password.size();i++)
+        {
+            if(isalpha(password[i])) alphaCNT++;
+            else if(isdigit(password[i])) digitCNT++;
+            else if(ispunct(password[i])) punctCNT++;
+        }
+        if(alphaCNT==0||digitCNT==0||punctCNT==0) return true;
+        else return false;
+    }
+}
+bool JoinPage::CheckEmail(void)
+{
+    if((email.find("@")==string::npos)||(email.find(".")==string::npos)) return true;
+    else if(email.find("@")>email.find(".")) //위 조건 통과
+    {
+        return true;
+    }
+    else //위 조건 모두 통과
+    {
+        //데이터 파일 열기
+        ifstream readFile;
+        readFile.open("data.csv");
+        if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
+        {
+            ofstream tempFile;
+            tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
+            if(!tempFile.is_open())
+            {
+                cout<<"이메일 중복 검사에 실패했습니다. \n";
+                exit(1);
+            }
+            tempFile.close();
+        }
+        //중복 검사 실시
+        string temp;
+        while(!readFile.eof())
+        {
+            for(int i=0;i<3;i++)
+            {
+                getline(readFile,temp,','); //회원번호,아이디,비밀번호 건너뛰기
+            }
+            getline(readFile,temp,','); //이메일 가져오기
+            if(!temp.compare(email)) //이메일이 중복이면
+            {
+                cout<<"중복된 이메일입니다. \n";
+                return true;
+            }
+            getline(readFile,temp,','); //비밀번호,이메일,휴대폰 건너뛰기
+        }
+        readFile.close();
+    }
+    return false;
+}
 void JoinPage::ProgressJoin(void)
 {
     sleep(1);
@@ -16,57 +129,8 @@ void JoinPage::ProgressJoin(void)
         //아이디 입력
         cout<<" 아이디 ______\b\b\b\b\b\b";
         cin>>id;
-        if(!id.compare("x"))
-        {
-            return;
-        }
-        //문자수 부족 혹은 초과이거나 영문자가 아닌 문자로 시작
-        unpass = (id.size()<6||id.size()>20)||(!isalpha(id.front())); 
-        if(!unpass) //위 조건 통과
-        {
-            for(int i=0;i<id.size();i++) //영문자,숫자 제외한 문자 있는지 검사
-            {
-                if(!islower(id[i])&&!isdigit(id[i])) 
-                {
-                    unpass=true;
-                }
-            }
-        }
-        if(!unpass) //위 조건 모두 통과
-        {
-            //데이터 파일 열기
-            ifstream readFile;
-            readFile.open("data.csv");
-            if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
-            {
-                ofstream tempFile;
-                tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
-                if(!tempFile.is_open())
-                {
-                    cout<<"아이디 중복 검사에 실패했습니다. \n";
-                    exit(1);
-                }
-                tempFile.close();
-            }
-            //중복 검사 실시
-            string temp;
-            while(!readFile.eof())
-            {
-                getline(readFile,temp,','); //회원번호 건너뛰기
-                getline(readFile,temp,','); //아이디 가져오기
-                if(!temp.compare(id)) //아이디가 중복이면
-                {
-                    cout<<"중복된 아이디입니다. \n";
-                    unpass = true;
-                    break;
-                }
-                for(int i=0;i<3;i++)
-                {
-                    getline(readFile,temp,','); //비밀번호,이메일,휴대폰 건너뛰기
-                }
-            }
-            readFile.close();
-        }
+        if(!id.compare("x")) return;
+        unpass=CheckID();
         while(unpass) //아이디 부적합 판정일때 재입력 요구
         {
             id.clear();
@@ -75,54 +139,7 @@ void JoinPage::ProgressJoin(void)
             cout<<" 아이디 ______\b\b\b\b\b\b";
             cin>>id;
             if(!id.compare("x")) break;
-            //문자수 부족 혹은 초과이거나 영문자가 아닌 문자로 시작
-            unpass = (id.size()<6||id.size()>20)||(!isalpha(id.front())); 
-            if(!unpass) //위 조건 통과
-            {
-                for(int i=0;i<id.size();i++) //영문자,숫자 제외한 문자 있는지 검사
-                {
-                    if(!islower(id[i])&&!isdigit(id[i])) 
-                    {
-                        unpass=true;
-                        break;
-                    }
-                }
-            }
-            if(!unpass) //위 조건 모두 통과
-            {
-                //데이터 파일 열기
-                ifstream readFile;
-                readFile.open("data.csv");
-                if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
-                {
-                    ofstream tempFile;
-                    tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
-                    if(!tempFile.is_open())
-                    {
-                        cout<<"아이디 중복 검사에 실패했습니다. \n";
-                        exit(1);
-                    }
-                    tempFile.close();
-                }
-                //중복 검사 실시
-                string temp;
-                while(!readFile.eof())
-                {
-                    getline(readFile,temp,','); //회원번호 건너뛰기
-                    getline(readFile,temp,','); //아이디 가져오기
-                    if(!temp.compare(id)) //아이디가 중복이면
-                    {
-                        cout<<"중복된 아이디입니다. \n";
-                        unpass = true;
-                        break;
-                    }
-                    for(int i=0;i<3;i++)
-                    {
-                        getline(readFile,temp,','); //비밀번호,이메일,휴대폰 건너뛰기
-                    }
-                }
-                readFile.close();
-            }
+            unpass=CheckID();
         }
         if(!id.compare("x"))
         {
@@ -134,21 +151,7 @@ void JoinPage::ProgressJoin(void)
         //비밀번호 입력
         cout<<" 비밀번호 __________\b\b\b\b\b\b\b\b\b\b";
         cin>>password;
-        unpass = (password.size()<8||password.size()>12); //자리수 검사
-        if(!unpass) //위 조건 통과
-        {
-            //영문자,숫자,특수문자 포함 확인 변수
-            unsigned short alphaCNT = 0;
-            unsigned short digitCNT = 0;
-            unsigned short punctCNT = 0;
-            for(int i=0;i<password.size();i++)
-            {
-                if(isalpha(password[i])) alphaCNT++;
-                else if(isdigit(password[i])) digitCNT++;
-                else if(ispunct(password[i])) punctCNT++;
-            }
-            unpass=(alphaCNT==0||digitCNT==0||punctCNT==0);
-        }
+        unpass = CheckPW();
         while(unpass)
         {
             password.clear();
@@ -156,21 +159,7 @@ void JoinPage::ProgressJoin(void)
             cout<<"--------------------------------------------------------\n";
             cout<<" 비밀번호 __________\b\b\b\b\b\b\b\b\b\b";
             cin>>password;
-            unpass = (password.size()<8||password.size()>12); //자리수 검사
-            if(!unpass)
-            {
-                //영문자,숫자,특수문자 포함 확인 변수
-                unsigned short alphaCNT = 0;
-                unsigned short digitCNT = 0;
-                unsigned short punctCNT = 0;
-                for(int i=0;i<password.size();i++)
-                {
-                    if(isalpha(password[i])) alphaCNT++;
-                    else if(isdigit(password[i])) digitCNT++;
-                    else if(ispunct(password[i])) punctCNT++;
-                }
-                unpass=(alphaCNT==0||digitCNT==0||punctCNT==0);
-            }
+            unpass = CheckPW();
         }
         cout<<"--------------------------------------------------------\n";
         cout<<"사용 가능한 비밀번호입니다. \n\n";
@@ -178,94 +167,14 @@ void JoinPage::ProgressJoin(void)
         //이메일 입력
         cout<<" 이메일 __________________\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
         cin>>email;
-        //이메일 입력값 검사
-        unpass = (email.find("@")==string::npos)||(email.find(".")==string::npos);
-        if(!unpass) //위 조건 통과
-        {
-            unpass=(email.find("@")>email.find("."));
-        }
-        if(!unpass) //위 조건 모두 통과
-        {
-            //데이터 파일 열기
-            ifstream readFile;
-            readFile.open("data.csv");
-            if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
-            {
-                ofstream tempFile;
-                tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
-                if(!tempFile.is_open())
-                {
-                    cout<<"이메일 중복 검사에 실패했습니다. \n";
-                    exit(1);
-                }
-                tempFile.close();
-            }
-            //중복 검사 실시
-            string temp;
-            while(!readFile.eof())
-            {
-                for(int i=0;i<3;i++)
-                {
-                    getline(readFile,temp,','); //회원번호,아이디,비밀번호 건너뛰기
-                }
-                getline(readFile,temp,','); //이메일 가져오기
-                if(!temp.compare(email)) //이메일이 중복이면
-                {
-                    cout<<"중복된 이메일입니다. \n";
-                    unpass = true;
-                    break;
-                }
-                getline(readFile,temp,','); //비밀번호,이메일,휴대폰 건너뛰기
-            }
-            readFile.close();
-        }
+        unpass = CheckEmail();
         while(unpass)
         {
             cout<<"올바르지 않은 이메일입니다. \n";
             cout<<"--------------------------------------------------------\n";
             cout<<" 이메일 __________________\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
             cin>>email;
-            //이메일 입력값 검사
-            unpass = (email.find("@")==string::npos)||(email.find(".")==string::npos);
-            if(!unpass)
-            {
-                unpass=(email.find("@")>email.find("."));
-            }
-            if(!unpass) //위 조건 모두 통과
-            {
-                //데이터 파일 열기
-                ifstream readFile;
-                readFile.open("data.csv");
-                if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
-                {
-                    ofstream tempFile;
-                    tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
-                    if(!tempFile.is_open())
-                    {
-                        cout<<"이메일 중복 검사에 실패했습니다. \n";
-                        exit(1);
-                    }
-                    tempFile.close();
-                }
-                //중복 검사 실시
-                string temp;
-                while(!readFile.eof())
-                {
-                    for(int i=0;i<3;i++)
-                    {
-                        getline(readFile,temp,','); //회원번호,아이디,비밀번호 건너뛰기
-                    }
-                    getline(readFile,temp,','); //이메일 가져오기
-                    if(!temp.compare(email)) //이메일이 중복이면
-                    {
-                        cout<<"중복된 이메일입니다. \n";
-                        unpass = true;
-                        break;
-                    }
-                    getline(readFile,temp,','); //비밀번호,이메일,휴대폰 건너뛰기
-                }
-                readFile.close();
-            }
+            unpass=CheckEmail();
         }
         cout<<"--------------------------------------------------------\n";
 

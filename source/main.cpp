@@ -79,8 +79,8 @@ int main(void)
                             cin>>userID;
                             cout<<" 비밀번호 > ";
                             cin>>userPW;
-                            //아이디, 비밀번호 일치 검사 넣어야함
-                            cout<<userID<<" "<<userPW<<endl; //확인용
+                            //아이디, 비밀번호 일치 검사
+                            
                             login = true;
                             break;
                         case 2: //아이디 찾기

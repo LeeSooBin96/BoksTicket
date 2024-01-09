@@ -15,6 +15,7 @@ int main(void)
     srand(time(NULL));
     bool quit = false; //종료 트리거
     bool login = false; //로그인 상태
+    bool pay; //결제 트리거
     unsigned short menuNum;
 
     MainPage main;
@@ -41,7 +42,11 @@ int main(void)
                     break;
                 }
                 cout<<"경기 예매를 진행합니다. \n";
-                reserve.ProgressRS();
+                pay=reserve.ProgressRS();
+                if(pay)
+                {
+                    cout<<"결제가 완료되었습니다. \n"; //결제 완료
+                }
                 break;
             }
             case 3:

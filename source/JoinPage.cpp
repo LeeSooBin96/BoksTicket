@@ -126,62 +126,102 @@ bool JoinPage::CheckEmail(void)
 void JoinPage::ProgressJoin(void)
 {
     sleep(1);
-        system("clear");
-        cout<<"[ 메인으로 돌아가려면 x를 입력해주세요 ] \n";
-        //아이디 입력
+    system("clear");
+    cout<<"[ 메인으로 돌아가려면 x를 입력해주세요 ] \n";
+    //아이디 입력
+    cout<<" 아이디 ______\b\b\b\b\b\b";
+    cin>>id;
+    if(!id.compare("x")) return;
+    unpass=CheckID();
+    while(unpass) //아이디 부적합 판정일때 재입력 요구
+    {
+        id.clear();
+        cout<<"영문으로 시작하는 6~20자 영문(소문자),숫자만 사용해주세요. \n";
+        cout<<"--------------------------------------------------------\n";
         cout<<" 아이디 ______\b\b\b\b\b\b";
         cin>>id;
-        if(!id.compare("x")) return;
+        if(!id.compare("x")) break;
         unpass=CheckID();
-        while(unpass) //아이디 부적합 판정일때 재입력 요구
-        {
-            id.clear();
-            cout<<"영문으로 시작하는 6~20자 영문(소문자),숫자만 사용해주세요. \n";
-            cout<<"--------------------------------------------------------\n";
-            cout<<" 아이디 ______\b\b\b\b\b\b";
-            cin>>id;
-            if(!id.compare("x")) break;
-            unpass=CheckID();
-        }
-        if(!id.compare("x"))
-        {
-            return;
-        }
-        cout<<"--------------------------------------------------------\n";
-        cout<<"사용 가능한 아이디입니다. \n\n";
+    }
+    if(!id.compare("x"))
+    {
+        return;
+    }
+    cout<<"--------------------------------------------------------\n";
+    cout<<"사용 가능한 아이디입니다. \n\n";
 
-        //비밀번호 입력
+    //비밀번호 입력
+    cout<<" 비밀번호 __________\b\b\b\b\b\b\b\b\b\b";
+    cin>>password;
+    unpass = CheckPW();
+    while(unpass)
+    {
+        password.clear();
+        cout<<"8~12자 영문자,숫자,특수문자를 포함해야 합니다. \n";
+        cout<<"--------------------------------------------------------\n";
         cout<<" 비밀번호 __________\b\b\b\b\b\b\b\b\b\b";
         cin>>password;
         unpass = CheckPW();
-        while(unpass)
-        {
-            password.clear();
-            cout<<"8~12자 영문자,숫자,특수문자를 포함해야 합니다. \n";
-            cout<<"--------------------------------------------------------\n";
-            cout<<" 비밀번호 __________\b\b\b\b\b\b\b\b\b\b";
-            cin>>password;
-            unpass = CheckPW();
-        }
-        cout<<"--------------------------------------------------------\n";
-        cout<<"사용 가능한 비밀번호입니다. \n\n";
+    }
+    cout<<"--------------------------------------------------------\n";
+    cout<<"사용 가능한 비밀번호입니다. \n\n";
 
-        //이메일 입력
+    //이메일 입력
+    cout<<" 이메일 __________________\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
+    cin>>email;
+    unpass = CheckEmail();
+    while(unpass)
+    {
+        cout<<"올바르지 않은 이메일입니다. \n";
+        cout<<"--------------------------------------------------------\n";
         cout<<" 이메일 __________________\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
         cin>>email;
-        unpass = CheckEmail();
-        while(unpass)
-        {
-            cout<<"올바르지 않은 이메일입니다. \n";
-            cout<<"--------------------------------------------------------\n";
-            cout<<" 이메일 __________________\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
-            cin>>email;
-            unpass=CheckEmail();
-        }
-        cout<<"--------------------------------------------------------\n";
+        unpass=CheckEmail();
+    }
+    cout<<"--------------------------------------------------------\n";
 
-        //휴대폰 번호 입력
+    //휴대폰 번호 입력
+    unpass = false; //초기화
+    cout<<" 휴대폰 (- 제외)___________\b\b\b\b\b\b\b\b\b\b\b";
+    cin>>phoneNum;
+    {
+        //데이터 파일 열기
+        ifstream readFile;
+        readFile.open("data.csv");
+        if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
+        {
+            ofstream tempFile;
+            tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
+            if(!tempFile.is_open())
+            {
+                cout<<"휴대폰 번호 중복 검사에 실패했습니다. \n";
+                exit(1);
+            }
+            tempFile.close();
+            readFile.clear();
+        }
+        //중복 검사 실시
+        string temp;
+        while(!readFile.eof())
+        {
+            for(int i=0;i<4;i++)
+            {
+                getline(readFile,temp,','); //회원번호,아이디,비밀번호,이메일 건너뛰기
+            }
+            getline(readFile,temp,','); //휴대폰 번호 가져오기
+            if(!temp.compare(phoneNum)) //휴대폰 번호가 중복이면
+            {
+                cout<<"중복된 휴대폰 번호입니다. \n";
+                unpass = true;
+                break;
+            }
+        }
+        readFile.close();
+    }
+    while(unpass)
+    {
         unpass = false; //초기화
+        cout<<"--------------------------------------------------------\n";
         cout<<" 휴대폰 (- 제외)___________\b\b\b\b\b\b\b\b\b\b\b";
         cin>>phoneNum;
         {
@@ -218,108 +258,68 @@ void JoinPage::ProgressJoin(void)
             }
             readFile.close();
         }
-        while(unpass)
-        {
-            unpass = false; //초기화
-            cout<<"--------------------------------------------------------\n";
-            cout<<" 휴대폰 (- 제외)___________\b\b\b\b\b\b\b\b\b\b\b";
-            cin>>phoneNum;
-            {
-                //데이터 파일 열기
-                ifstream readFile;
-                readFile.open("data.csv");
-                if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
-                {
-                    ofstream tempFile;
-                    tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
-                    if(!tempFile.is_open())
-                    {
-                        cout<<"휴대폰 번호 중복 검사에 실패했습니다. \n";
-                        exit(1);
-                    }
-                    tempFile.close();
-                    readFile.clear();
-                }
-                //중복 검사 실시
-                string temp;
-                while(!readFile.eof())
-                {
-                    for(int i=0;i<4;i++)
-                    {
-                        getline(readFile,temp,','); //회원번호,아이디,비밀번호,이메일 건너뛰기
-                    }
-                    getline(readFile,temp,','); //휴대폰 번호 가져오기
-                    if(!temp.compare(phoneNum)) //휴대폰 번호가 중복이면
-                    {
-                        cout<<"중복된 휴대폰 번호입니다. \n";
-                        unpass = true;
-                        break;
-                    }
-                }
-                readFile.close();
-            }
-        }
+    }
 
-        //회원번호 생성
-        long long makeNum = CID + rand()%CID;
-        sprintf(acctID,"%lld",makeNum);
-        //회원번호 중복 검사
-        ifstream readFile;
-        readFile.open("data.csv");
-        if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
+    //회원번호 생성
+    long long makeNum = CID + rand()%CID;
+    sprintf(acctID,"%lld",makeNum);
+    //회원번호 중복 검사
+    ifstream readFile;
+    readFile.open("data.csv");
+    if(!readFile.is_open()) //파일 열렸는지 확인(파일이 없으면 안열린다)
+    {
+        ofstream tempFile;
+        tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
+        if(!tempFile.is_open())
         {
-            ofstream tempFile;
-            tempFile.open("data.csv"); //없으면 데이터 파일 생성해주기
-            if(!tempFile.is_open())
-            {
-                cout<<"회원번호 생성에 실패했습니다. \n";
-                exit(1);
-            }
-            tempFile.close();
-            readFile.clear();
-        }
-
-        string temp;
-        while(!readFile.eof()) //회원번호 생성 및 중복 검사
-        {
-            getline(readFile,temp,',');
-            if(!temp.find(acctID))
-            {
-                makeNum = CID + rand()%CID;
-                sprintf(acctID,"%lld",makeNum);
-            }
-            for(int i=0;i<4;i++)
-            {
-                getline(readFile,temp,','); //아이디,비밀번호,이메일,휴대폰 건너뛰기
-            }
-        }
-        readFile.close();
-
-        cout<<"--------------------------------------------------------\n";
-        cout<<"등록된 정보는 다음과 같습니다. \n";
-        cout<<"회원 번호 : "<<acctID<<endl;
-        cout<<"아이디 : "<<id<<endl;
-        cout<<"비밀번호 : ";
-        for(int i=0;i<password.size();i++)
-        {
-            cout<<"● ";
-        }
-        cout<<endl;
-        cout<<"이메일 : "<<email<<endl;
-        cout<<"휴대폰 : "<<phoneNum<<endl;
-        
-        
-        //데이터 파일에 저장
-        ofstream writeFile;
-        writeFile.open("data.csv",ios_base::app);
-        if(!writeFile.is_open()) //파일 열렸는지 확인
-        {
-            cout<<"회원 데이터 저장에 실패했습니다. \n";
+            cout<<"회원번호 생성에 실패했습니다. \n";
             exit(1);
         }
-        //파일에 입력
-        writeFile<<acctID<<","<<id<<","<<password<<","<<email<<","<<phoneNum<<","<<endl;
-        writeFile.close();
+        tempFile.close();
+        readFile.clear();
+    }
 
-        sleep(1);
+    string temp;
+    while(!readFile.eof()) //회원번호 생성 및 중복 검사
+    {
+        getline(readFile,temp,',');
+        if(!temp.find(acctID))
+        {
+            makeNum = CID + rand()%CID;
+            sprintf(acctID,"%lld",makeNum);
+        }
+        for(int i=0;i<4;i++)
+        {
+            getline(readFile,temp,','); //아이디,비밀번호,이메일,휴대폰 건너뛰기
+        }
+    }
+    readFile.close();
+
+    cout<<"--------------------------------------------------------\n";
+    cout<<"등록된 정보는 다음과 같습니다. \n";
+    cout<<"회원 번호 : "<<acctID<<endl;
+    cout<<"아이디 : "<<id<<endl;
+    cout<<"비밀번호 : ";
+    for(int i=0;i<password.size();i++)
+    {
+        cout<<"● ";
+    }
+    cout<<endl;
+    cout<<"이메일 : "<<email<<endl;
+    cout<<"휴대폰 : "<<phoneNum<<endl;
+    
+    
+    //데이터 파일에 저장
+    ofstream writeFile;
+    writeFile.open("data.csv",ios_base::app);
+    if(!writeFile.is_open()) //파일 열렸는지 확인
+    {
+        cout<<"회원 데이터 저장에 실패했습니다. \n";
+        exit(1);
+    }
+    //파일에 입력
+    writeFile<<acctID<<","<<id<<","<<password<<","<<email<<","<<phoneNum<<","<<endl;
+    writeFile.close();
+
+    sleep(1);
 }

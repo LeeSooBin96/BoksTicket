@@ -43,7 +43,7 @@ class ReservePage
 
     public:
         //예매 진행
-        void ProgressRS(void);
+        short ProgressRS(void);
         //구역 선택 - 상태 플래그 반환
         short SelecSection(void);
         //자리 선택 - 상태 플래그 반환

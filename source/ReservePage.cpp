@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <unistd.h>
 #include <string>
 
@@ -30,8 +31,7 @@ short ReservePage::SelecSection(void)
         cin.clear(); //에러 플래그 초기화
         cout<<"잘못된 입력입니다. \n";
         while(cin.get()!='\n'); //버퍼 비우기
-        SelecSection();
-        return 0;
+        return SelecSection();
     }
     switch(section)
     {
@@ -39,24 +39,24 @@ short ReservePage::SelecSection(void)
             Ticket.clear();
             return -1;
         case 1:
-            Ticket.append("MVIP ");
+            Ticket.append("MVIP,");
             price+=250000;
             break;
         case 2:
-            Ticket.append("VIP ");
+            Ticket.append("VIP,");
             price+=200000;
             break;
         case 3:
-            Ticket.append("GOLD ");
+            Ticket.append("GOLD,");
             price+=120000;
             break;
         case 4:
-            Ticket.append("SILVER ");
+            Ticket.append("SILVER,");
             price+=80000;
             break;
         default:
             cout<<"잘못된 입력입니다.\n";
-            SelecSection();
+            return SelecSection();
             break;
     }
     return 0;
@@ -203,7 +203,7 @@ short ReservePage::SelecSeat(void)
             else if(seatNum<10)
             {
                 cout<<"이미 선택된 좌석입니다. \n";
-                SelecSeat();
+                return SelecSeat();
             }
             else
             {
@@ -220,7 +220,7 @@ short ReservePage::SelecSeat(void)
             else if(seatNum<28)
             {
                 cout<<"이미 선택된 좌석입니다. \n";
-                SelecSeat();
+                return SelecSeat();
             }
             else
             {
@@ -237,7 +237,7 @@ short ReservePage::SelecSeat(void)
             else if(seatNum<52)
             {
                 cout<<"이미 선택된 좌석입니다. \n";
-                SelecSeat();
+                return SelecSeat();
             }
             else
             {
@@ -254,7 +254,7 @@ short ReservePage::SelecSeat(void)
             else if(seatNum<54)
             {
                 cout<<"이미 선택된 좌석입니다. \n";
-                SelecSeat();
+                return SelecSeat();
             }
             else
             {
@@ -267,7 +267,7 @@ short ReservePage::SelecSeat(void)
     }
     return 0;
 }
-void ReservePage::ProgressRS(void)
+short ReservePage::ProgressRS(void)
 {
     short flag;
     char answer;
@@ -291,33 +291,32 @@ void ReservePage::ProgressRS(void)
         cin.clear(); //에러 플래그 초기화
         cout<<"잘못된 입력입니다. 메인창으로 돌아갑니다.\n";
         while(cin.get()!='\n'); //버퍼 비우기
-        return;
+        return 0;
     }
     switch(day)
     {
         case 0:
             cout<<"메인으로 돌아갑니다. \n";
-            return;
+            return 0;
         case 1:
-            Ticket.append("1/15 ");
+            Ticket.append("1/15,");
             break;
         case 2:
-            Ticket.append("1/20 ");
+            Ticket.append("1/20,");
             break;
         case 3:
-            Ticket.append("1/25 ");
+            Ticket.append("1/25,");
             break;
         default:
             cout<<"잘못된 입력입니다. 메인창으로 돌아갑니다.\n";
-            return;
+            return 0;
     }
 
     flag=SelecSection(); //구역 선택
     if(flag==-1) //비정상적 종료
     {
         Ticket.clear();
-        ProgressRS(); //다시 실행
-        return;
+        return ProgressRS(); //다시 실행
     }
 
     flag=SelecSeat(); //좌석 선택
@@ -325,17 +324,17 @@ void ReservePage::ProgressRS(void)
     {
         Ticket.clear();
         price=0;
-        ProgressRS(); //다시 실행
-        return;
+        return ProgressRS(); //다시 실행
     }
     if(count[day-1]==2)
     {
         cout<<"예매할 수 있는 좌석 수를 초과하셨습니다. \n";
-        return;
+        Ticket.clear();
+        return ProgressRS();
     }
     //좌석 정보 확인
     cout<<"선택한 좌석> \n";
-    cout<<Ticket<<" "<<seatNum<<"번 "<<price<<"원"<<endl;
+    cout<<Ticket<<seatNum<<"번,"<<price<<"원"<<endl;
     cout<<"계속해서 좌석을 선택하시겠습니까? (Y/N)";
     cin.get(); //버퍼에 남아있는 개행 지우기
     cin>>answer;
@@ -346,47 +345,67 @@ void ReservePage::ProgressRS(void)
         answer = cin.get();
         while(cin.get()!='\n');
     } 
+    Tlist=Ticket;
+    Tlist.append(std::to_string(seatNum));
+    Tlist.append(",");
+    Tlist.append(std::to_string(price));
+    Tlist.append(",");
+    std::ofstream writeFile;
+    writeFile.open("temp.txt",std::ios::app); //임시 저장 파일
+    writeFile<<Tlist<<endl;
+    writeFile.close();
     if(answer=='y'||answer=='Y') //선택된 정보 저장하고 좌석 계속 선택
     {
-        Tlist=Ticket;
-        Tlist.append(std::to_string(seatNum));
-        cout<<Tlist;
+        cout<<"좌석 선택을 계속합니다. \n";
+        Ticket.clear();
+        Tlist.clear();
+        price = 0;
+        return ProgressRS();
     }
     else //결제 진행
     {
-        
-    }             
-    return 0;         
-                 
-               
-                //     //계속해서 자리 선택 구현 --이걸 생각 못했네 이래서 1인 2매 이런게 있구나
-                //     //나중에 하고 일단 결제 진행
-                //     //예매 내역 확인 및 결제 진행
-                //     sleep(1);
-                //     system("clear");
-                //     cout<<"< 예매 정보 > \n";
-                //     cout<<Ticket<<seatNum<<"번 좌석 \n";
-                //     cout<<"위의 예매 정보가 맞습니까? (Y/N)";
-                //     cin.get(); answer = cin.get();
-                //     while(cin.get()!='\n');
-                //     while(answer!='y'&&answer!='Y'&&answer!='n'&&answer!='N')
-                //     {
-                //         cout<<"다시 입력해주세요 > ";
-                //         answer = cin.get();
-                //         while(cin.get()!='\n');
-                //     }
-                //     if(answer=='y'||answer=='Y')
-                //     {
-                //         cout<<"결제가 진행됩니다. \n";
-                //         quit_t=true;
-                //     }
-                //     else
-                //     {
-                //         cout<<"메인으로 돌아갑니다. \n";
-                //         break;
-                //     }
-                // }
-                // quit_t=false;
-                // Ticket.clear();
-                // price = 0;
+        cout<<"결제를 진행합니다. \n";
+        //선택한 좌석 출력
+        sleep(1);
+        system("clear");
+        cout<<"선택된 좌석 > \n";
+        std::ifstream readFile;
+        readFile.open("temp.txt"); //좌석 정보 저장되어있는 임시 파일
+        std::string line;
+        Tlist.clear();
+        while(true)
+        {
+            readFile>>line;
+            if(readFile.eof()) break;
+            Tlist.append(line);
+            Tlist.append("\n");
+        } //임시파일에서 선택 좌석 정보 읽어와 Tlist에 저장
+        cout<<Tlist;
+        //결제 여부
+        cout<<"계속해서 결제하시겠습니까? (Y/N)";
+        cin>>answer;
+        while(cin.get()!='\n');
+        while(answer!='y'&&answer!='Y'&&answer!='n'&&answer!='N')
+        {
+            cout<<"다시 입력해주세요 > ";
+            answer = cin.get();
+            while(cin.get()!='\n');
+        } 
+        //ok면 결제 return 1
+        if(answer=='y'||answer=='Y')
+        {
+            std::ofstream initFile;
+            initFile.open("temp.txt"); //임시파일 비우기
+            initFile.close();
+            //유저 데이터에 저장해야함
+            return 1;
+        }
+        //no면 메인 return 0
+        else
+        {
+            cout<<"결제를 취소하고 메인으로 돌아갑니다. \n";
+            return 0;
+        }
+    }
+    return 0;             
 }

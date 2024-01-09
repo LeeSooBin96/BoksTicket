@@ -9,6 +9,6 @@ class MainPage
         //메뉴 출력
         void ShowMenu(void);
         //메인 페이지(메뉴 번호 입력 받아 반환) - 매개변수:로그인상태값
-        unsigned short Home(bool);
+        unsigned int Home(bool);
 };
 #endif

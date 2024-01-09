@@ -17,7 +17,7 @@ void MainPage::ShowMenu(void)
             "---------------------- \n";
 }
 //메인 페이지 진행(로그인 상태값 전달 받음)
-unsigned short MainPage::Home(bool login)
+unsigned int MainPage::Home(bool login)
 {
     if(!login) //로그인이 안되어 있을때
     {

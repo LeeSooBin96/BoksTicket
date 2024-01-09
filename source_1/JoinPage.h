@@ -1,8 +1,8 @@
-#ifndef JOIN_PAGE_H_
-#define JOIN_PAGE_H_
-
 #include <iostream>
 #include <string>
+
+#ifndef JOIN_PAGE_H_
+#define JOIN_PAGE_H_
 
 using std::string;
 

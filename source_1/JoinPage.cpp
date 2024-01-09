@@ -37,7 +37,6 @@ bool JoinPage::CheckID(void)
                 exit(1);
             }
             tempFile.close();
-            readFile.clear();
         }
         //중복 검사 실시
         string temp;
@@ -101,7 +100,6 @@ bool JoinPage::CheckEmail(void)
                 exit(1);
             }
             tempFile.close();
-            readFile.clear();
         }
         //중복 검사 실시
         string temp;
@@ -198,7 +196,6 @@ void JoinPage::ProgressJoin(void)
                     exit(1);
                 }
                 tempFile.close();
-                readFile.clear();
             }
             //중복 검사 실시
             string temp;
@@ -238,7 +235,6 @@ void JoinPage::ProgressJoin(void)
                         exit(1);
                     }
                     tempFile.close();
-                    readFile.clear();
                 }
                 //중복 검사 실시
                 string temp;
@@ -276,7 +272,6 @@ void JoinPage::ProgressJoin(void)
                 exit(1);
             }
             tempFile.close();
-            readFile.clear();
         }
 
         string temp;

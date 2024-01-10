@@ -1,9 +1,9 @@
 #include <fstream>
 #include <unistd.h>
+#include <termios.h>
 
 #include "LoginPage.h"
 #include "JoinPage.h"
-#include "GetCh.h"
 
 using std::cout;
 using std::cin;
@@ -11,7 +11,24 @@ using std::endl;
 using std::ifstream;
 using std::ofstream;
 
+int getch()
+{
+    int in_char;
+    struct termios back_up;
+    struct termios change;
+    
+    tcgetattr(0,&back_up); //기존 설정 저장
+    change = back_up;
+    //설정 변경
+    change.c_lflag &= ~(ICANON|ECHO);
+    change.c_cc[VMIN]=1;
+    change.c_cc[VTIME]=0;
 
+    tcsetattr(0,TCSAFLUSH,&change); //변경된 설정 적용
+    in_char=getchar();
+    tcsetattr(0,TCSAFLUSH,&back_up); //원래 설정으로 복구
+    return in_char;
+}
 //티켓 저장
 void LoginPage::SaveTicket(string & Tlist)
 {
@@ -19,7 +36,7 @@ void LoginPage::SaveTicket(string & Tlist)
     int count=0;
 
     ofstream writeFile;
-    writeFile.open("BookingL.csv");
+    writeFile.open("BookingL.csv",std::ios::app);
     ifstream readFile;
     readFile.open("BookingL.csv");
     
@@ -27,19 +44,18 @@ void LoginPage::SaveTicket(string & Tlist)
     {
         count++;
         getline(readFile,line,','); //해당하는 아이디 찾기
-        if(readFile.eof()&&count==1) //첫줄 부터 없으면 개행 없이
+        if(readFile.eof()&&count==1)
         {
             writeFile<<userID<<","<<Tlist; //아이디,티켓 정보 연달아 입력될것
             break;
         }
-        else if(readFile.eof()) //아이디 없을때
+        else if(readFile.eof()) //아이디 없음
         {
             writeFile<<"\n"<<userID<<","<<Tlist; //아이디,티켓 정보 연달아 입력될것
             break;
         }
-        else if(line.compare(userID)==0) //일치하는 아이디 찾으면
+        else if(!line.compare(userID)) //일치하는 아이디 찾으면
         {
-            std::cout<<line<<endl;
             writeFile<<Tlist;
             break;
         }

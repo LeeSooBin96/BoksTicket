@@ -427,7 +427,7 @@ short ReservePage::ProgressRS(LoginPage & login)
     Tlist.append(",");
     std::ofstream writeFile;
     writeFile.open("temp.txt",std::ios::app); //임시 저장 파일
-    writeFile<<Tlist<<std::endl;
+    writeFile<<Tlist<<endl;
     writeFile.close();
     if(answer=='y'||answer=='Y') //선택된 정보 저장하고 좌석 계속 선택
     {

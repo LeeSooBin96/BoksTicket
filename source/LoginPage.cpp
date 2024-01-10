@@ -16,16 +16,15 @@ using std::ofstream;
 void LoginPage::SaveTicket(string & Tlist)
 {
     string line;
-    int count=0;
+    int count=1;
 
     ofstream writeFile;
-    writeFile.open("BookingL.csv");
+    writeFile.open("BookingL.csv",std::ios_base::in);
     ifstream readFile;
     readFile.open("BookingL.csv");
     
     while(true)
     {
-        count++;
         getline(readFile,line,','); //해당하는 아이디 찾기
         if(readFile.eof()&&count==1) //첫줄 부터 없으면 개행 없이
         {
@@ -34,18 +33,45 @@ void LoginPage::SaveTicket(string & Tlist)
         }
         else if(readFile.eof()) //아이디 없을때
         {
+            writeFile.seekp(0,std::ios::end);
             writeFile<<"\n"<<userID<<","<<Tlist; //아이디,티켓 정보 연달아 입력될것
             break;
         }
         else if(line.compare(userID)==0) //일치하는 아이디 찾으면
         {
-            std::cout<<line<<endl;
-            writeFile<<Tlist;
+            getline(readFile,line); //줄 끝으로
+            if(count==1)
+            {
+                writeFile.seekp(readFile.cur+userID.size()+line.size());
+            }
+            else
+            {
+                writeFile.seekp(readFile.cur+userID.size()+line.size()+count+1);
+            }
+            short cnt=0;
+            string tmp;
+            while(true) //뒤에 있는 것들 덮어써지므로 지켜야함
+            {
+                getline(readFile,line); //한줄씩 읽어
+                if(readFile.eof()) break; //파일 끝이면 그만
+                cout<<line<<endl;
+                // Tlist.append("\n"); //개행 삽입
+                // Tlist.append(line); //내용 추가
+                tmp.append(line);
+                cnt++;
+            }
+            writeFile<<Tlist; //개행 전까지 읽어들여서...;;
+            for(int i=0;i<cnt;i++)
+            {
+                
+            }
             break;
         }
         else //다음줄로 넘어가기
         {
+            count+=line.size();
             getline(readFile,line);
+            count+=line.size();
         }
     }
     readFile.close();
@@ -111,6 +137,11 @@ unsigned short LoginPage::ShowTicket(void)
 {
     unsigned short listNum=0; //목록 번호
     CountTicet();
+    if(count[0]==0&&count[1]==0&&count[2]==0)
+    {
+        cout<<"예매내역이 없습니다. \n";
+        return listNum;
+    }
     if(count[0]!=0)
     {
         listNum++;

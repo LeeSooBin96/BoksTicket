@@ -10,6 +10,6 @@ class PayPage
     private:
         std::string Tlist;
     public:
-        bool ProgressPay(LoginPage & login);
+        bool ProgressPay(LoginPage & login,unsigned int & Tprice);
 };
 #endif

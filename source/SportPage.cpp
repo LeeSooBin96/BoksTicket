@@ -3,11 +3,44 @@
 #include <unistd.h>
 
 #include "SportPage.h"
+#include "GetCh.h"
 
 using std::cout;
 using std::cin;
 
-void SportPage::ShowInfo(void)
+void SportPage::ShowInfoCur(unsigned int pos)
+{
+    switch (pos)
+    {
+    case 0:
+        cout<<"1. 조편성 및 조별 경기 일정 \n"
+            "\x1b[30m2. 참가국 정보 \n"
+            "3. 대한민국 감독/선수단 \n"
+            "4. 메인으로 \x1b[m\n";
+        break;
+    case 1:
+        cout<<"\x1b[30m1. 조편성 및 조별 경기 일정 \x1b[m\n"
+            "2. 참가국 정보 \n"
+            "\x1b[30m3. 대한민국 감독/선수단 \n"
+            "4. 메인으로 \x1b[m\n";
+        break;
+    case 2:
+        cout<<"\x1b[30m1. 조편성 및 조별 경기 일정 \n"
+            "2. 참가국 정보 \x1b[m\n"
+            "3. 대한민국 감독/선수단 \n"
+            "\x1b[30m4. 메인으로 \x1b[m\n";
+        break;
+    case 3:
+        cout<<"\x1b[30m1. 조편성 및 조별 경기 일정 \n"
+            "2. 참가국 정보 \n"
+            "3. 대한민국 감독/선수단 \x1b[m\n"
+            "4. 메인으로 \n";
+        break;
+    default:
+        break;
+    }
+}
+void SportPage::ShowInfo(unsigned int pos)
 {   
     std::string line;
     std::ifstream readFile;
@@ -23,26 +56,74 @@ void SportPage::ShowInfo(void)
         "기간: 2024년 1월 12일 (금) ~ 2월 10일 (일) (현지기준) \n"
         "개최지: 카타르 도하, 알 와크라, 알 라이얀, 알 코르 \n"
         "중계: tvN, tvN SPORTS, 쿠팡플레이 \n"
-        "< 상세 정보 조회 > \n"
-        "1. 조편성 및 조별 경기 일정 \n"
-        "2. 참가국 정보 \n"
-        "3. 대한민국 감독/선수단 \n"
-        "4. 메인으로 \n"
-        "------------------------------------------------------------ \n";
+        "< 상세 정보 조회 > \n";
+    ShowInfoCur(pos);
+    cout<<"------------------------------------------------------------ \n";
 }
-void SportPage::ShowGroup(void)
+void SportPage::ShowGroupCur(unsigned int pos)
+{
+    switch (pos)
+    {
+    case 0:
+        cout<<"A조. 카타르, 중국 타지키스탄, 레바논 \n"
+        "\x1b[30mB조. 호주, 우즈베키스탄, 시리아, 인도 \n"
+        "C조. 이란, 아랍에미리트, 홍콩, 팔레스타인 \n"
+        "D조. 일본, 인도네시아, 이라크, 베트남 \n"
+        "E조. \x1b[94m대한민국\x1b[30m, 말레이시아, 요르단, 바레인 \n"
+        "F조. 사우디아라비아, 태국, 카르기스스탄, 오만 \x1b[m\n";
+        break;
+    case 1:
+        cout<<"\x1b[30mA조. 카타르, 중국 타지키스탄, 레바논 \x1b[m\n"
+        "B조. 호주, 우즈베키스탄, 시리아, 인도 \n"
+        "\x1b[30mC조. 이란, 아랍에미리트, 홍콩, 팔레스타인 \n"
+        "D조. 일본, 인도네시아, 이라크, 베트남 \n"
+        "E조. \x1b[94m대한민국\x1b[30m, 말레이시아, 요르단, 바레인 \n"
+        "F조. 사우디아라비아, 태국, 카르기스스탄, 오만 \x1b[m\n";
+        break;
+    case 2:
+        cout<<"\x1b[30mA조. 카타르, 중국 타지키스탄, 레바논 \n"
+        "B조. 호주, 우즈베키스탄, 시리아, 인도 \x1b[m\n"
+        "C조. 이란, 아랍에미리트, 홍콩, 팔레스타인 \n"
+        "\x1b[30mD조. 일본, 인도네시아, 이라크, 베트남 \n"
+        "E조. \x1b[94m대한민국\x1b[30m, 말레이시아, 요르단, 바레인 \n"
+        "F조. 사우디아라비아, 태국, 카르기스스탄, 오만 \x1b[m\n";
+        break;
+    case 3:
+        cout<<"\x1b[30mA조. 카타르, 중국 타지키스탄, 레바논 \n"
+        "B조. 호주, 우즈베키스탄, 시리아, 인도 \n"
+        "C조. 이란, 아랍에미리트, 홍콩, 팔레스타인 \x1b[m\n"
+        "D조. 일본, 인도네시아, 이라크, 베트남 \n"
+        "\x1b[30mE조. \x1b[94m대한민국\x1b[30m, 말레이시아, 요르단, 바레인 \n"
+        "F조. 사우디아라비아, 태국, 카르기스스탄, 오만 \x1b[m\n";
+        break;
+    case 4:
+        cout<<"\x1b[30mA조. 카타르, 중국 타지키스탄, 레바논 \n"
+        "B조. 호주, 우즈베키스탄, 시리아, 인도 \n"
+        "C조. 이란, 아랍에미리트, 홍콩, 팔레스타인 \n"
+        "D조. 일본, 인도네시아, 이라크, 베트남 \x1b[m\n"
+        "E조. \x1b[94m대한민국\x1b[m, 말레이시아, 요르단, 바레인 \n"
+        "\x1b[30mF조. 사우디아라비아, 태국, 카르기스스탄, 오만 \x1b[m\n";
+        break;
+    case 5:
+        cout<<"\x1b[30mA조. 카타르, 중국 타지키스탄, 레바논 \n"
+        "B조. 호주, 우즈베키스탄, 시리아, 인도 \n"
+        "C조. 이란, 아랍에미리트, 홍콩, 팔레스타인 \n"
+        "D조. 일본, 인도네시아, 이라크, 베트남 \n"
+        "E조. \x1b[94m대한민국\x1b[30m, 말레이시아, 요르단, 바레인 \x1b[m\n"
+        "F조. 사우디아라비아, 태국, 카르기스스탄, 오만 \n";
+        break;
+    default:
+        break;
+    }
+}
+void SportPage::ShowGroup(unsigned int pos)
 {
     //조편성 정보 출력
     cout<<"------------------------------------------------------ \n"
         "\x1b[1;106m 조 |         참가국                                \x1b[m\n"
-        "------------------------------------------------------ \n"
-        "A조. 카타르, 중국 타지키스탄, 레바논 \n"
-        "B조. 호주, 우즈베키스탄, 시리아, 인도 \n"
-        "C조. 이란, 아랍에미리트, 홍콩, 팔레스타인 \n"
-        "D조. 일본, 인도네시아, 이라크, 베트남 \n"
-        "E조. \x1b[94m대한민국\x1b[m, 말레이시아, 요르단, 바레인 \n"
-        "F조. 사우디아라비아, 태국, 카르기스스탄, 오만 \n"
         "------------------------------------------------------ \n";
+    ShowGroupCur(pos);
+    cout<<"------------------------------------------------------ \n";
 }
 void SportPage::ShowGroupSchedule(void)
 {
@@ -181,7 +262,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 메샬 바르샴 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 2:
             cout<<"국가명> 중국 \n"
@@ -194,7 +274,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 우샤오총 \n"
                     "골키퍼] 옌췬링 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 3:
@@ -209,7 +288,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 메흐디 칼릴 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 4:
             cout<<"국가명> 타지키스탄 \n"
@@ -222,7 +300,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 아크탐 나자로프 \n"
                     "골키퍼] 루스탐 야티모프 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 5:
@@ -237,7 +314,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 매튜 라이언 \n"
                     "\n\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 6:
             cout<<"국가명> 우즈베키스탄 \n"
@@ -250,7 +326,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 루스탐 아슐마토프 \n"
                     "골키퍼] 웃키르 유수포프 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 7:
@@ -265,7 +340,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 아브라힘 알마 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 8:
             cout<<"국가명> 인도 \n"
@@ -278,7 +352,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 산데시 징간 \n"
                     "골키퍼] 구르프리트 싱 산두 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 9:
@@ -293,7 +366,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 알리레자 베이란반드 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 10:
             cout<<"국가명> 아랍에미리트 \n"
@@ -306,7 +378,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 칼리파 알함마디 \n"
                     "골키퍼] 칼리드 에이사 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 11:
@@ -321,7 +392,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 얍 훙 파이 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 12:
             cout<<"국가명> 팔레스타인 \n"
@@ -334,7 +404,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 압델라티프 바흐다리 \n"
                     "골키퍼] 라미 하마데 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 13:
@@ -349,7 +418,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 스즈키 자이온 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 14:
             cout<<"국가명> 인도네시아 \n"
@@ -362,7 +430,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 조르디 아마트 \n"
                     "골키퍼] 니데오 아르가위나타 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 15:
@@ -377,7 +444,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 잘랄 하산 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 16:
             cout<<"국가명> 베트남 \n"
@@ -390,7 +456,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 웨응옥하이 \n"
                     "골키퍼] 필리프 응우엔 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 17:
@@ -405,7 +470,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 김승규 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 18:
             cout<<"국가명> 말레이시아 \n"
@@ -418,7 +482,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 도미닉 탄 \n"
                     "골키퍼] 시한 하즈미 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 19:
@@ -433,7 +496,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 하산 아불라일라 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 20:
             cout<<"국가명> 바레인 \n"
@@ -446,7 +508,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 사예드 디야 \n"
                     "골키퍼] 사예드 모하메드 자페르 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 21:
@@ -461,7 +522,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 나와프 알아키디 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 22:
             cout<<"국가명> 태국 \n"
@@ -474,7 +534,6 @@ void SportPage::ShowNationInfo(void)
                     "수비수] 타라톤 분마탄 \n"
                     "골키퍼] 파티왓 캄마이 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
-            cin.get();
             cin.get();
             break;
         case 23:
@@ -489,7 +548,6 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 에르잔 토코타예프 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
         case 24:
             cout<<"국가명> 오만 \n"
@@ -503,53 +561,98 @@ void SportPage::ShowNationInfo(void)
                     "골키퍼] 파이즈 알 루샤이디 \n"
                     "\n엔터키 입력 시 돌아갑니다) \n";
             cin.get();
-            cin.get();
             break;
     }
 }
 void SportPage::HomeBoard(void)
 {
+    sleep(1);
     while(!quit_s)
     {
-        sleep(1);
+        unsigned short pos=0; //커서 위치
+        bool quit = false; //종료 트리거
+        int input; //입력 인자
+        // sleep(1);
         system("clear");
-        ShowInfo();
+        ShowInfo(pos);
         //메뉴 번호 입력
-        cout<<"선택 >";
-        cin>>menu;
-        //잘못된 입력(숫자 이외)
-        while(!cin)
+        cout<<"(상:w,↑/하:s,↓) (선택: 엔터) \n";
+        while(!quit)
         {
-            cin.clear(); //에러 플래그 초기화
-            cout<<"잘못된 입력입니다. 다시 입력하세요. \n";
-            while(cin.get()!='\n'); //버퍼 비우기
-            cin>>menu;
+            input=getch(); //방향키 입력(상:27,91,65) 하(27,91,66) 엔터(10)
+            switch (input)
+            {
+            case 65: //방향키 상
+            case 'w':
+                if(pos!=0) pos--;
+                system("clear");
+                ShowInfo(pos);
+                cout<<"(상:w,↑/하:s,↓) (선택: 엔터) \n";
+                break;
+            case 66:
+            case 's':
+                if(pos!=3) pos++;
+                system("clear");
+                ShowInfo(pos);
+                cout<<"(상:w,↑/하:s,↓) (선택: 엔터) \n";
+                break;
+            case 10:
+                menu=pos+1;
+                quit=true;
+                break;
+            default:
+                break;
+            }
         }
-        //잘못된 입력(숫자)
-        while(menu>4)
-        {
-            cout<<"잘못된 입력입니다. 다시 입력하세요. \n";
-            cin>>menu;
-        }
-        cout<<"------------------------------------------------------------ \n";
         switch(menu)
         {
             case 1: //조편성 및 조별 경기 일정
-                cin.get(); //숫자->문자 입력 받기전 버퍼 비우기
+                pos = 0;
                 while(true)
                 {
+                    quit = false;
+                    
                     system("clear");
-                    ShowGroup();
-                    cout<<"경기 일정을 조회할 조를 입력해주세요(돌아가기는 X) >";
-                    group = cin.get();
-                    if(group=='x'||group=='X') 
+                    ShowGroup(pos);
+                    cout<<"경기 일정을 조회할 조를 선택해주세요 \n(상:w,↑/하:s,↓) (선택: 엔터) (이전으로 x)\n";
+                    while(!quit)
                     {
-                        while(cin.get()!='\n'); //버퍼 비우기
+                        input=getch(); //방향키 입력(상:27,91,65) 하(27,91,66) 엔터(10)
+                        switch (input)
+                        {
+                        case 65: //방향키 상
+                        case 'w':
+                            if(pos!=0) pos--;
+                            system("clear");
+                            ShowGroup(pos);
+                            cout<<"경기 일정을 조회할 조를 선택해주세요 \n(상:w,↑/하:s,↓) (선택: 엔터) (이전으로 x)\n";
+                            break;
+                        case 66:
+                        case 's':
+                            if(pos!=5) pos++;
+                            system("clear");
+                            ShowGroup(pos);
+                            cout<<"경기 일정을 조회할 조를 선택해주세요 \n(상:w,↑/하:s,↓) (선택: 엔터) (이전으로 x)\n";
+                            break;
+                        case 10:
+                            group=pos+'A';
+                            quit=true;
+                            break;
+                        case 'x':
+                        case 'X':
+                            quit=true;
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                    if(input=='x'||input=='X')
+                    {
+                        quit=false; pos=0;
                         break;
                     }
                     cout<<"------------------------------------------------------ \n";
                     ShowGroupSchedule();
-                    while(cin.get()!='\n'); //버퍼 비우기
                 }
                 break;
             case 2: //참가국 정보
@@ -582,9 +685,14 @@ void SportPage::HomeBoard(void)
                         cout<<"잘못된 입력입니다. 다시 입력하세요. \n";
                         cin>>nation;
                     }
-                    if(nation==0) break;
+                    if(nation==0)
+                    {
+                        cin.get();
+                        break;
+                    }
                     cout<<"------------------------------------------------------ \n";
                     ShowNationInfo();
+                    cin.get();
                 }
                 break;
             case 3: // 대한민국 감독/선수단 정보
@@ -604,7 +712,6 @@ void SportPage::HomeBoard(void)
                         "    이순민, 이재성, 홍현석, 황인범, 황희찬 \n\n"
                         "FW] 오현규, 정우영, 조규성 \n\n"
                         "엔터키 입력시 돌아갑니다)";
-                cin.get();
                 cin.get();
                 break;
             case 4:

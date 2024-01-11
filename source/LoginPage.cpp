@@ -40,30 +40,14 @@ void LoginPage::SaveTicket(string & Tlist)
         else if(line.compare(userID)==0) //일치하는 아이디 찾으면
         {
             getline(readFile,line); //줄 끝으로
-            if(count==1)
+            if(readFile.eof()) //맨 끝줄이면 추가
             {
-                writeFile.seekp(readFile.cur+userID.size()+line.size());
+                writeFile<<","<<Tlist;
             }
-            else
+            else //아니면 새줄에 저장
             {
-                writeFile.seekp(readFile.cur+userID.size()+line.size()+count+1);
-            }
-            short cnt=0;
-            string tmp;
-            while(true) //뒤에 있는 것들 덮어써지므로 지켜야함
-            {
-                getline(readFile,line); //한줄씩 읽어
-                if(readFile.eof()) break; //파일 끝이면 그만
-                cout<<line<<endl;
-                // Tlist.append("\n"); //개행 삽입
-                // Tlist.append(line); //내용 추가
-                tmp.append(line);
-                cnt++;
-            }
-            writeFile<<Tlist; //개행 전까지 읽어들여서...;;
-            for(int i=0;i<cnt;i++)
-            {
-                
+                writeFile.seekp(0,std::ios::end);
+                writeFile<<"\n"<<userID<<","<<Tlist;
             }
             break;
         }
@@ -117,21 +101,25 @@ unsigned short* LoginPage::CountTicet(void)
                 {
                     count[2]++;
                 }
+                else if(!line.compare("\n"+userID)) //다음줄로 넘어감
+                {
+                    continue;
+                }
+                else break;
                 for(int i=0;i<3;i++)
                 {
                     getline(readFile,line,','); //좌석 구역,번호,가격 건너뜀
                 }
             }
-            break;
         }
-        else //아이디 불일치
-        {
-            getline(readFile,line); //남은 줄 읽어들이기
-        }
+        // else //아이디 불일치
+        // {
+        getline(readFile,line); //남은 줄 읽어들이기
+        // }
     }
+    readFile.close();
     return count;
 }
-
 //보유 티켓 출력
 unsigned short LoginPage::ShowTicket(void)
 {
@@ -172,7 +160,6 @@ void LoginPage::ShowTDetail(unsigned short listNum)
         getline(readFile,line,','); //해당하는 아이디 찾기
         if(readFile.eof()) //데이터 없음
         {
-            cout<<"예매내역이 존재하지 않습니다. \n";
             break;
         }
         else if(!line.compare(userID)) //일치하는 아이디 찾으면
@@ -256,18 +243,22 @@ void LoginPage::ShowTDetail(unsigned short listNum)
                         continue;
                     }
                 }
-                else break;
+                else if(!line.compare("\n"+userID)) //다음줄로 넘어갔는데 같은 아이디
+                {
+                    continue;
+                }
+                else break; //다른아이디 나오면
                 for(int i=0;i<3;i++)
                 {
                     getline(readFile,line,','); //좌석 구역,번호,가격 건너뜀
                 }
             }
-            break;
+            
         }
-        else //다음줄로 넘어가기
-        {
+        // else //다음줄로 넘어가기
+        // {
             getline(readFile,line);
-        }
+        // }
     }
     readFile.close();
 }
@@ -277,39 +268,97 @@ void LoginPage::ClearUserInfo(void)
     userPW.clear();
     for(int i=0;i<3;i++) count[i]=0;
 }
+void LoginPage::ShowMenu(unsigned short pos)
+{
+    switch (pos)
+    {
+    case 0:
+        cout<<"1. 아이디 / 비밀번호 입력하기 \n"
+            "\x1b[30m2. 아이디 찾기 \n"
+            "3. 비밀번호 찾기 \n"
+            "4. 회원가입 \n"
+            "5. 메인으로 \x1b[m\n";
+        break;
+    case 1:
+        cout<<"\x1b[30m1. 아이디 / 비밀번호 입력하기 \x1b[m\n"
+            "2. 아이디 찾기 \n"
+            "\x1b[30m3. 비밀번호 찾기 \n"
+            "4. 회원가입 \n"
+            "5. 메인으로 \x1b[m\n";
+        break;
+    case 2:
+        cout<<"\x1b[30m1. 아이디 / 비밀번호 입력하기 \n"
+            "2. 아이디 찾기 \x1b[m\n"
+            "3. 비밀번호 찾기 \n"
+            "\x1b[30m4. 회원가입 \n"
+            "5. 메인으로 \x1b[m\n";
+        break;
+    case 3:
+        cout<<"\x1b[30m1. 아이디 / 비밀번호 입력하기 \n"
+            "2. 아이디 찾기 \n"
+            "3. 비밀번호 찾기 \x1b[m\n"
+            "4. 회원가입 \n"
+            "\x1b[30m5. 메인으로 \x1b[m\n";
+        break;
+    case 4:
+        cout<<"\x1b[30m1. 아이디 / 비밀번호 입력하기 \n"
+            "2. 아이디 찾기 \n"
+            "3. 비밀번호 찾기 \n"
+            "4. 회원가입 \x1b[m\n"
+            "5. 메인으로 \n";
+        break;
+    default:
+        break;
+    }
+}
 void LoginPage::ProgressLogin(bool & login)
 {
+    unsigned short pos=0;
+    bool quit = false;
+    int in_key;
     sleep(1);
+    
     system("clear");
-    cout<<"\x1b[1;106m-----------|L||o||g||i||n||P||a||g||e|-----------\x1b[m\n"
-        "1. 아이디 / 비밀번호 입력하기 \n"
-        "2. 아이디 찾기 \n"
-        "3. 비밀번호 찾기 \n"
-        "4. 회원가입 \n"
-        "5. 메인으로 \n"
-        "-------------------------------------------------\n";
-    cout<<"선택 > ";
-    cin>>menu;
-    //잘못된 입력(숫자 이외)
-    while(!cin) 
+    cout<<"\x1b[1;106m-----------|L||o||g||i||n||P||a||g||e|-----------\x1b[m\n";
+    ShowMenu(pos);
+    cout<<"-------------------------------------------------\n";
+    cout<<"(상:w,↑/하:s,↓) (선택: 엔터) \n";
+    while(!quit)
     {
-        cin.clear(); //에러 플래그 초기화
-        cout<<"잘못된 입력입니다. 다시 입력하세요. \n";
-        while(cin.get()!='\n'); //버퍼 비우기
-        cin>>menu;
-    }
-    //잘못된 입력(숫자)
-    while(menu>5)
-    {
-        cout<<"잘못된 입력입니다. 다시 입력하세요. \n";
-        cin>>menu;
+        in_key=getch(); //방향키 입력(상:27,91,65) 하(27,91,66) 엔터(10)
+        switch (in_key)
+        {
+        case 65: //방향키 상
+        case 'w':
+            if(pos!=0) pos--;
+            system("clear");
+            cout<<"\x1b[1;106m-----------|L||o||g||i||n||P||a||g||e|-----------\x1b[m\n";
+            ShowMenu(pos);
+            cout<<"-------------------------------------------------\n";
+            cout<<"(상:w,↑/하:s,↓) (선택: 엔터) \n";
+            break;
+        case 66:
+        case 's':
+            if(pos!=4) pos++;
+            system("clear");
+            cout<<"\x1b[1;106m-----------|L||o||g||i||n||P||a||g||e|-----------\x1b[m\n";
+            ShowMenu(pos);
+            cout<<"-------------------------------------------------\n";
+            cout<<"(상:w,↑/하:s,↓) (선택: 엔터) \n";
+            break;
+        case 10:
+            menu=pos+1;
+            quit=true;
+            break;
+        default:
+            break;
+        }
     }
     switch(menu)
     {
         case 1: //로그인 진행
         {
             int input;
-            sleep(1);
             system("clear");
             cout<<"\x1b[1;106m-----------|L||o||g||i||n||P||a||g||e|-----------\x1b[m\n";
             cout<<" 아이디 > ";
@@ -317,12 +366,23 @@ void LoginPage::ProgressLogin(bool & login)
             cin.get();
             cout<<" 비밀번호 > ";
             // cin>>userPW;
+            unsigned short count=0;//백스페이스 제한
             while(1)
             {
                 input=getch();
                 if(input=='\n') break;
-                cout<<"*";
-                userPW.push_back(input);
+                else if(count!=0&&input==127) //지우기일때
+                {
+                    cout<<"\b \b";
+                    userPW.pop_back();
+                    count--;
+                }
+                else if(input!=127)
+                {
+                    cout<<"*";
+                    userPW.push_back(input);
+                    count++;
+                }
             }
             cout<<"\n-------------------------------------------------\n";
             
@@ -385,7 +445,6 @@ void LoginPage::ProgressLogin(bool & login)
         }
         case 2: //아이디 찾기
         {
-            sleep(1);
             system("clear");
             cout<<"\x1b[1;106m-----------|L||o||g||i||n||P||a||g||e|-----------\x1b[m\n";
             cout<<"이메일 혹은 휴대폰 번호를 입력해주십시오 > ";
@@ -442,7 +501,6 @@ void LoginPage::ProgressLogin(bool & login)
         }
         case 3: //비밀번호 찾기
         {
-            sleep(1);
             system("clear");
             cout<<"\x1b[1;106m-----------|L||o||g||i||n||P||a||g||e|-----------\x1b[m\n";
             cout<<"아이디 > ";
@@ -515,6 +573,7 @@ void LoginPage::ProgressLogin(bool & login)
             cout<<"회원 가입을 진행합니다. \n";
             JoinPage join;
             join.ProgressJoin();
+            cin.get();
             break;
         }
         case 5: //메인으로

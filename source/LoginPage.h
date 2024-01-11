@@ -18,6 +18,8 @@ class LoginPage
         unsigned short count[3]= { 0 }; //일자별 매수 계산
 
     public:
+        //메뉴 출력 - 커서 위치 입력 받음
+        void ShowMenu(unsigned short);
         //로그인 정보 초기화
         void ClearUserInfo(void);
         //로그인 진행(로그인 상태변수 참조)

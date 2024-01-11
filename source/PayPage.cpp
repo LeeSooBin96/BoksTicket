@@ -5,7 +5,7 @@
 #include "PayPage.h"
 #include "LoginPage.h"
 
-bool PayPage::ProgressPay(LoginPage & login)
+bool PayPage::ProgressPay(LoginPage & login,unsigned int & Tprice)
 {
     char answer;
     //선택한 좌석 출력
@@ -33,20 +33,21 @@ bool PayPage::ProgressPay(LoginPage & login)
         answer = std::cin.get();
         while(std::cin.get()!='\n');
     } 
-    std::ofstream initFile;
-    initFile.open("temp.txt"); //임시파일 비우기
-    initFile.close();
+    
     //ok면 결제 return 1
     if(answer=='y'||answer=='Y')
     {
+        std::cout<<Tprice<<"원이 결제됩니다. \n";
         //유저 데이터에 저장해야함
         login.SaveTicket(Tlist);
+        Tprice =0;
         return true;
     }
     //no면 메인 return 0
     else
     {
         std::cout<<"결제를 취소하고 메인으로 돌아갑니다. \n";
+        Tprice = 0;
         return false;
     }
 }

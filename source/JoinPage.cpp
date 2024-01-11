@@ -172,7 +172,6 @@ void JoinPage::ProgressJoin(void)
     unpass = CheckEmail();
     while(unpass)
     {
-        cout<<"올바르지 않은 이메일입니다. \n";
         cout<<"--------------------------------------------------------\n";
         cout<<" 이메일 __________________\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
         cin>>email;
@@ -328,7 +327,6 @@ void JoinPage::ProgressJoin(void)
     cout<<"이메일 : "<<email<<endl;
     cout<<"휴대폰 : "<<phoneNum<<endl;
     cout<<"\n엔터키를 누르시면 메인으로 돌아갑니다. \n";
-    cin.get();
     cin.get();
     
     //데이터 파일에 저장

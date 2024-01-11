@@ -24,7 +24,8 @@ class ReservePage
         short seatNum;
         //예매 정보 저장
         std::string Ticket;
-        int price = 0;
+        unsigned int price = 0;
+        unsigned int Tprice = 0;
         DaySeat dayseat[3];
         //좌석 인덱스
         unsigned short index[4]={ 0 }; //MVIP, VIP, GOLD, SILVER 순
@@ -52,5 +53,11 @@ class ReservePage
         short SelecSeat(void);
         //자리 셋팅 - 예매된 좌석 true로
         void SetSeat(void);
+        //결제 취소된 자리 초기화
+        void UnselSeat(void);
+        //커서 이동 화면 구현
+        void ShowDay(unsigned short);
+        void ShowSection(unsigned short);
+
 };
 #endif

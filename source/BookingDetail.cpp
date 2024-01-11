@@ -7,7 +7,6 @@
 
 void BookingDetail::ShowBookingL(LoginPage& login)
 {
-    sleep(1);
     system("clear");
     unsigned short count;
     unsigned short input;

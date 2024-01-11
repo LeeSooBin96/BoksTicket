@@ -64,6 +64,7 @@ int main(void)
                         {
                             BookingDetail booking;
                             booking.ShowBookingL(loginP);
+                            cin.get();
                         }
                         else
                         {
@@ -84,6 +85,7 @@ int main(void)
                 {
                     BookingDetail booking;
                     booking.ShowBookingL(loginP);
+                    cin.get();
                 }
                 break;
             }
@@ -94,6 +96,7 @@ int main(void)
                     cout<<"회원 가입을 진행합니다. \n";
                     JoinPage join;
                     join.ProgressJoin();
+                    cin.get();
                 }
                 else //로그인 시 로그아웃 
                 {

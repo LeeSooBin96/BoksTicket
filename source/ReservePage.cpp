@@ -541,7 +541,6 @@ short ReservePage::ProgressRS(LoginPage & login)
             break;
         }
     }
-    count=login.CountTicet();
     switch(day)
     {
         case 1:
@@ -572,9 +571,17 @@ short ReservePage::ProgressRS(LoginPage & login)
         price=0;
         return ProgressRS(login); //다시 실행
     }
+    // count=login.CountTicet();
+    unsigned short* tmp;
+    tmp=login.CountTicet();
+    for(int i=0;i<3;i++)
+    {
+        count[i]+=tmp[i];
+    }
     if(count[day-1]>2)
     {
         cout<<"예매할 수 있는 좌석 수를 초과하셨습니다. (1일 2매 가능)\n";
+        cin.get();
         Ticket.clear();
         sleep(1);
         return ProgressRS(login);
@@ -616,16 +623,6 @@ short ReservePage::ProgressRS(LoginPage & login)
             truncFile.open("temp.txt");
             truncFile.close();
             return 0;
-        }
-        else
-        {
-            if(count[day-1]>2)
-            {
-                cout<<"예매할 수 있는 좌석 수를 초과하셨습니다. (1일 2매 가능)\n";
-                Ticket.clear();
-                sleep(1);
-                return ProgressRS(login);
-            }
         }
     }
     else //결제 진행

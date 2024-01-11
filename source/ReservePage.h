@@ -17,7 +17,7 @@ class ReservePage
 {
     private:
         //예매 페이지
-        unsigned short* count; //일정마다 카운트 - 1일 1인 2매
+        unsigned short count[3]={ 0 }; //일정마다 카운트 - 1일 1인 2매
 
         unsigned short day;
         unsigned short section; //1 MVIP|2 VIP|3 GOLD|4 SILVER

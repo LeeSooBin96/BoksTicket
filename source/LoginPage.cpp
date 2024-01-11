@@ -42,12 +42,29 @@ void LoginPage::SaveTicket(string & Tlist)
             getline(readFile,line); //줄 끝으로
             if(readFile.eof()) //맨 끝줄이면 추가
             {
-                writeFile<<","<<Tlist;
+                writeFile.seekp(0,std::ios::end);
+                writeFile<<Tlist;
             }
             else //아니면 새줄에 저장
             {
-                writeFile.seekp(0,std::ios::end);
-                writeFile<<"\n"<<userID<<","<<Tlist;
+                while (true)
+                {
+                    getline(readFile,line);
+                    if(readFile.eof()) break;
+                }
+                if(line.find(userID)!=string::npos) //마지막 줄에 해당하는 아이디 예매 내역이 있다면
+                {
+                    writeFile.seekp(0,std::ios::end);
+                    writeFile<<Tlist; //티켓 정보만 추가
+                }
+                else //아니면 새줄에 추가
+                {
+                    writeFile.seekp(0,std::ios::end);
+                    writeFile<<"\n"<<userID<<","<<Tlist;
+                }
+                // cout<<"새줄에 추가\n";
+                // writeFile.seekp(0,std::ios::end);
+                // writeFile<<"\n"<<userID<<","<<Tlist;
             }
             break;
         }
@@ -101,7 +118,7 @@ unsigned short* LoginPage::CountTicet(void)
                 {
                     count[2]++;
                 }
-                else if(!line.compare("\n"+userID)) //다음줄로 넘어감
+                else if(!line.compare("\n"+userID)) 
                 {
                     continue;
                 }

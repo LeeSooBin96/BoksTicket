@@ -41,6 +41,7 @@ bool PayPage::ProgressPay(LoginPage & login,unsigned int & Tprice)
         //유저 데이터에 저장해야함
         login.SaveTicket(Tlist);
         Tprice =0;
+        sleep(1);
         return true;
     }
     //no면 메인 return 0
